@@ -1,5 +1,5 @@
 // Filter Toolbar Styles - Native Tailwind Components
-// 4-Layer Architecture with responsive design
+// 4-Layer Architecture with Light Theme Only
 
 .filter-toolbar {
   // Base container styles
@@ -19,14 +19,14 @@
     }
 
     &::-webkit-scrollbar-track {
-      @apply bg-slate-100 dark:bg-slate-800;
+      @apply bg-slate-100;
     }
 
     &::-webkit-scrollbar-thumb {
-      @apply bg-slate-400 dark:bg-slate-600 rounded;
+      @apply bg-slate-400 rounded;
 
       &:hover {
-        @apply bg-slate-500 dark:bg-slate-500;
+        @apply bg-slate-500;
       }
     }
   }
@@ -47,7 +47,7 @@
   select,
   button {
     &:focus-visible {
-      @apply outline-none ring-2 ring-blue-500 ring-offset-2 dark:ring-offset-slate-900;
+      @apply outline-none ring-2 ring-blue-500 ring-offset-2;
     }
   }
 
@@ -74,7 +74,7 @@
     appearance: none;
 
     &::placeholder {
-      @apply text-slate-500 dark:text-slate-400;
+      @apply text-slate-500;
     }
 
     &:focus {
@@ -168,19 +168,12 @@
     animation: slideIn 0.3s ease-out;
   }
 
-  // Dark mode overrides (handled by Tailwind's dark: prefix in HTML)
-  @media (prefers-color-scheme: dark) {
-    select {
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%9CA3AF'%3E%3Cpath fill-rule='evenodd' d='M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z' clip-rule='evenodd'/%3E%3C/svg%3E");
-    }
-  }
-
   // High contrast mode support (WCAG)
   @media (prefers-contrast: more) {
     input,
     select,
     button {
-      @apply border-2 border-slate-700 dark:border-slate-300;
+      @apply border-2 border-slate-700;
     }
 
     button {
@@ -248,5 +241,14 @@
 // Layer 4 (Core):
 //   - Today button for primary action
 //   - Position at end of filter toolbar
-//   - Clear call-to-action styling with distinct color
+//   - Clear call-to-action styling with distinct color (emerald)
 //   - Provides quick access to current date navigation
+//
+// LIGHT THEME DESIGN:
+//   - Background gradient: slate-50 to slate-100
+//   - Inputs: white background with slate-300 borders
+//   - Text: slate-900 for main, slate-500 for secondary
+//   - Focus: blue-500 ring indicators
+//   - Primary button: emerald gradient (emerald-500 to emerald-600)
+//   - Secondary button: slate gray
+//   - Borders: slate-200 and slate-300
