@@ -1,31 +1,334 @@
-<div class="filter-toolbar flex flex-wrap items-center gap-2 px-4 py-2 bg-surface-header border-b border-border">
-  <form [formGroup]="form" class="flex flex-wrap items-center gap-2 flex-1">
-    <mat-form-field appearance="outline" class="filter-field">
-      <mat-icon matPrefix>search</mat-icon>
-      <input matInput formControlName="search" placeholder="Search">
-    </mat-form-field>
-    <mat-form-field appearance="outline" class="filter-field">
-      <mat-select formControlName="office"><mat-option *ngFor="let o of offices" [value]="o">{{o}}</mat-option></mat-select>
-    </mat-form-field>
-    <mat-form-field appearance="outline" class="filter-field">
-      <mat-select formControlName="clientType"><mat-option *ngFor="let c of clientTypes" [value]="c">{{c}}</mat-option></mat-select>
-    </mat-form-field>
-    <mat-form-field appearance="outline" class="filter-field">
-      <mat-select formControlName="supervisor"><mat-option *ngFor="let s of supervisors" [value]="s">{{s}}</mat-option></mat-select>
-    </mat-form-field>
-    <button mat-flat-button color="primary" (click)="apply()" class="apply-btn">Apply</button>
-    <button mat-button (click)="reset()" class="text-text-secondary">Reset</button>
-  </form>
-  <div class="flex items-center gap-2 ml-auto">
-    <mat-slide-toggle formControlName="showDetails" class="text-sm">Show Details</mat-slide-toggle>
-    <mat-form-field appearance="outline" class="filter-field w-24">
-      <mat-select formControlName="viewMode"><mat-option *ngFor="let v of viewModes" [value]="v">{{v}}</mat-option></mat-select>
-    </mat-form-field>
-    <div class="flex items-center gap-1">
-      <button mat-icon-button (click)="prevWeek()"><mat-icon>chevron_left</mat-icon></button>
-      <span class="text-sm font-medium text-text-primary px-2">{{currentWeekLabel}}</span>
-      <button mat-icon-button (click)="nextWeek()"><mat-icon>chevron_right</mat-icon></button>
+<!-- Filter Toolbar Component - Native Tailwind Components -->
+<!-- 4-Layer Architecture for organized filter management -->
+
+<div
+  class="filter-toolbar w-full bg-gradient-to-r from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 border-b border-slate-200 dark:border-slate-700 shadow-sm"
+  role="region"
+  aria-label="Filter and Navigation Controls"
+>
+  <!-- Live Region for Screen Reader Announcements -->
+  <div
+    class="sr-only"
+    role="status"
+    aria-live="polite"
+    aria-atomic="true"
+  >
+    {{ getFilterStatusAriaLabel() }}
+  </div>
+
+  <!-- Main Container with 4-Layer Structure -->
+  <div class="flex flex-col lg:flex-row lg:items-center gap-4 p-4 lg:p-6">
+    
+    <!-- ========================================
+         LAYER 1: PRESENTATION
+         Search Input & Primary Filters
+         ======================================== -->
+    <form
+      [formGroup]="form"
+      class="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-3 flex-1"
+      (ngSubmit)="apply()"
+      novalidate
+    >
+      <!-- Search Input -->
+      <div class="flex-1 min-w-48">
+        <label for="search-input" class="sr-only">Search by keyword</label>
+        <div class="relative">
+          <svg
+            class="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-slate-400 dark:text-slate-500 pointer-events-none"
+            aria-hidden="true"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+            />
+          </svg>
+          <input
+            id="search-input"
+            type="text"
+            formControlName="search"
+            placeholder="Search schedules..."
+            maxlength="100"
+            class="w-full pl-10 pr-4 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 focus:ring-2 focus:ring-blue-500 focus:ring-offset-0 dark:focus:ring-offset-0 transition-all"
+            aria-label="Search for schedules"
+            aria-describedby="search-help"
+          />
+        </div>
+        <div id="search-help" class="sr-only">
+          Enter up to 100 characters to search
+        </div>
+        <div
+          class="mt-1"
+          *ngIf="form.get('search')?.hasError('xssDetected')"
+          class="text-red-500 text-xs"
+        >
+          <span role="alert">⚠️ Invalid characters detected</span>
+        </div>
+      </div>
+
+      <!-- Office Filter -->
+      <div class="flex-1 min-w-44">
+        <label for="office-select" class="sr-only">Filter by office</label>
+        <select
+          id="office-select"
+          formControlName="office"
+          class="w-full px-3 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:ring-offset-0 appearance-none cursor-pointer transition-all"
+          aria-label="Select office"
+        >
+          <option *ngFor="let o of offices" [value]="o">{{ o }}</option>
+        </select>
+      </div>
+
+      <!-- Client Type Filter -->
+      <div class="flex-1 min-w-44">
+        <label for="clienttype-select" class="sr-only">Filter by client type</label>
+        <select
+          id="clienttype-select"
+          formControlName="clientType"
+          class="w-full px-3 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:ring-offset-0 appearance-none cursor-pointer transition-all"
+          aria-label="Select client type"
+        >
+          <option *ngFor="let c of clientTypes" [value]="c">{{ c }}</option>
+        </select>
+      </div>
+
+      <!-- Supervisor Filter -->
+      <div class="flex-1 min-w-44">
+        <label for="supervisor-select" class="sr-only">Filter by supervisor</label>
+        <select
+          id="supervisor-select"
+          formControlName="supervisor"
+          class="w-full px-3 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:ring-offset-0 appearance-none cursor-pointer transition-all"
+          aria-label="Select supervisor"
+        >
+          <option *ngFor="let s of supervisors" [value]="s">{{ s }}</option>
+        </select>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex gap-2 items-center">
+        <button
+          type="submit"
+          [disabled]="form.invalid"
+          class="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-400 text-white font-medium rounded-lg transition-colors focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-slate-900"
+          aria-label="Apply filters"
+        >
+          <span class="flex items-center gap-2">
+            <svg
+              class="h-4 w-4"
+              aria-hidden="true"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8m0 8l6.946-6.946M12 5l-6.057 6.057M12 5V3m0 8v8"
+              />
+            </svg>
+            Apply
+          </span>
+        </button>
+        <button
+          type="button"
+          (click)="reset()"
+          class="px-4 py-2 bg-slate-200 hover:bg-slate-300 dark:bg-slate-600 dark:hover:bg-slate-700 text-slate-900 dark:text-white font-medium rounded-lg transition-colors focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-slate-900"
+          aria-label="Reset all filters"
+        >
+          Reset
+        </button>
+      </div>
+    </form>
+
+    <!-- Divider -->
+    <div class="hidden lg:block w-px h-8 bg-slate-300 dark:bg-slate-600"></div>
+
+    <!-- ========================================
+         LAYER 2: CONTAINER
+         Details Toggle & View Mode Selector
+         ======================================== -->
+    <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 lg:gap-4">
+      <!-- Show Details Toggle -->
+      <label class="flex items-center gap-2 cursor-pointer group">
+        <input
+          type="checkbox"
+          formControlName="showDetails"
+          role="switch"
+          [attr.aria-checked]="form.get('showDetails')?.value"
+          class="w-5 h-5 rounded border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 checked:bg-blue-600 checked:border-blue-600 text-white focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-slate-900 cursor-pointer transition-colors"
+          aria-label="Toggle detailed view"
+        />
+        <span
+          class="text-sm font-medium text-slate-700 dark:text-slate-300 group-hover:text-slate-900 dark:group-hover:text-white transition-colors"
+        >
+          Details
+        </span>
+      </label>
+
+      <!-- View Mode Selector -->
+      <div class="flex-1 sm:flex-initial min-w-32">
+        <label [for]="'viewmode-select'" class="sr-only">{{
+          getViewModeAriaLabel()
+        }}</label>
+        <select
+          id="viewmode-select"
+          formControlName="viewMode"
+          (change)="viewModeChanged.emit(form.get('viewMode')?.value)"
+          class="w-full px-3 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:ring-offset-0 appearance-none cursor-pointer transition-all"
+          [attr.aria-label]="getViewModeAriaLabel()"
+        >
+          <option *ngFor="let v of viewModes" [value]="v">
+            {{ v }} View
+          </option>
+        </select>
+      </div>
     </div>
-    <button mat-stroked-button (click)="goToday()" class="today-btn">Today</button>
+  </div>
+
+  <!-- Divider -->
+  <div class="hidden lg:block h-px bg-slate-200 dark:bg-slate-700"></div>
+
+  <!-- ========================================
+       LAYER 3 & 4: FEATURE & CORE
+       Week Navigation & Today Button
+       ======================================== -->
+  <div
+    class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 px-4 py-3 lg:px-6 lg:py-4 bg-slate-50/50 dark:bg-slate-800/50"
+  >
+    <!-- Week Navigation Controls -->
+    <div class="flex items-center justify-between sm:justify-start gap-2">
+      <button
+        type="button"
+        (click)="prevWeek()"
+        class="p-2 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg transition-colors focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-slate-900"
+        aria-label="Go to previous week"
+        title="Previous week (Ctrl+Shift+Left)"
+      >
+        <svg
+          class="h-5 w-5 text-slate-600 dark:text-slate-400"
+          aria-hidden="true"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+            clip-rule="evenodd"
+          />
+        </svg>
+      </button>
+
+      <!-- Current Week Display -->
+      <div class="text-center px-3">
+        <span
+          class="text-sm font-semibold text-slate-900 dark:text-white"
+          role="status"
+          aria-live="polite"
+          aria-atomic="true"
+        >
+          {{ currentWeekLabel }}
+        </span>
+        <div class="sr-only">Current week: {{ currentWeekLabel }}</div>
+      </div>
+
+      <button
+        type="button"
+        (click)="nextWeek()"
+        class="p-2 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg transition-colors focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-slate-900"
+        aria-label="Go to next week"
+        title="Next week (Ctrl+Shift+Right)"
+      >
+        <svg
+          class="h-5 w-5 text-slate-600 dark:text-slate-400"
+          aria-hidden="true"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+            clip-rule="evenodd"
+          />
+        </svg>
+      </button>
+    </div>
+
+    <!-- Today Button (Primary Action) -->
+    <button
+      type="button"
+      (click)="goToday()"
+      class="px-4 py-2 bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition-all focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 dark:focus:ring-offset-slate-900"
+      aria-label="Navigate to today"
+      title="Go to today (Ctrl+T)"
+    >
+      <span class="flex items-center justify-center gap-2">
+        <svg
+          class="h-4 w-4"
+          aria-hidden="true"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v2h16V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
+            clip-rule="evenodd"
+          />
+        </svg>
+        Today
+      </span>
+    </button>
   </div>
 </div>
+
+<!-- 
+  ============================================
+  4-LAYER ARCHITECTURE DOCUMENTATION
+  ============================================
+
+  LAYER 1 - PRESENTATION (Main Filter Form):
+  - Search input with XSS prevention
+  - Office dropdown with all filter options
+  - Client Type dropdown
+  - Supervisor dropdown
+  - Apply and Reset buttons
+  - Purpose: Collect user filter preferences
+
+  LAYER 2 - CONTAINER (View Configuration):
+  - Show Details toggle switch
+  - View Mode selector (Week/Day/Month)
+  - Purpose: Configure how data is displayed
+
+  LAYER 3 - FEATURE (Week Navigation):
+  - Previous week button
+  - Current week label with live region updates
+  - Next week button
+  - Purpose: Navigate through time periods
+
+  LAYER 4 - CORE (Primary Action):
+  - Today button as the main call-to-action
+  - Purpose: Quick navigation to current date
+  - Gradient styling emphasizes importance
+
+  ACCESSIBILITY FEATURES:
+  ✓ ARIA labels for all controls
+  ✓ Live regions for status updates
+  ✓ Screen reader only content
+  ✓ High contrast mode support
+  ✓ Reduced motion support (via CSS)
+  ✓ Keyboard navigation support
+  ✓ Form validation messages
+  ✓ Icon + text for clarity
+
+  SECURITY FEATURES (OWASP):
+  ✓ XSS prevention via input validation
+  ✓ maxlength attributes on text inputs
+  ✓ No innerHTML usage
+  ✓ Safe data binding via Angular
+  ✓ Form validation before submission
+-->
