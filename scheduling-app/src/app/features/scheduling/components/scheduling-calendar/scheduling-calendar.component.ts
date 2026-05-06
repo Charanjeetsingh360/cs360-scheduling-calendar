@@ -10,6 +10,7 @@ export class SchedulingCalendarComponent implements OnInit,OnDestroy{
   weekStart=new Date(2025,6,17);
   today=new Date();
   currentPage=1; pageSize=10; totalItems=0;
+  min = Math.min;
   dayNames=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
   statusLegend=[{key:'DS',color:'#FFC107'},{key:'HIS',color:'#FF9800'},{key:'Schd',color:'#2196F3'},{key:'KCBC',color:'#9C27B0'},{key:'Confirmed',color:'#4CAF50'},{key:'NR',color:'#EF5350'},{key:'APPRVD',color:'#009688'},{key:'CONS',color:'#FF5722'}];
   constructor(private svc:SchedulingService){}
