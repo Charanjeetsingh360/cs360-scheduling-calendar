@@ -1,1 +1,252 @@
-.filter-toolbar{background:var(--surface-header);border-bottom:1px solid var(--border-color);min-height:48px;} .filter-field{height:36px;font-size:13px;} .filter-field .mat-mdc-form-field-subscript-wrapper{display:none;} .apply-btn{background:var(--color-primary)!important;color:#fff;font-size:13px;height:36px;} .today-btn{border-color:var(--color-primary)!important;color:var(--color-primary)!important;}
+// Filter Toolbar Styles - Native Tailwind Components
+// 4-Layer Architecture with responsive design
+
+.filter-toolbar {
+  // Base container styles
+  position: relative;
+  display: flex;
+  width: 100%;
+
+  // Ensure smooth transitions for all interactive elements
+  * {
+    @apply transition-colors;
+  }
+
+  // Custom scrollbar styling for selects in Firefox
+  select {
+    &::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    &::-webkit-scrollbar-track {
+      @apply bg-slate-100 dark:bg-slate-800;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      @apply bg-slate-400 dark:bg-slate-600 rounded;
+
+      &:hover {
+        @apply bg-slate-500 dark:bg-slate-500;
+      }
+    }
+  }
+
+  // Hover effects for buttons
+  button {
+    &:disabled {
+      @apply opacity-50 cursor-not-allowed;
+    }
+
+    &:active:not(:disabled) {
+      @apply scale-95;
+    }
+  }
+
+  // Focus states for accessibility
+  input,
+  select,
+  button {
+    &:focus-visible {
+      @apply outline-none ring-2 ring-blue-500 ring-offset-2 dark:ring-offset-slate-900;
+    }
+  }
+
+  // SVG icons styling
+  svg {
+    &.icon-small {
+      @apply h-4 w-4;
+    }
+
+    &.icon-medium {
+      @apply h-5 w-5;
+    }
+
+    &.icon-large {
+      @apply h-6 w-6;
+    }
+  }
+
+  // Search input specific styles
+  input[type="search"],
+  input[type="text"] {
+    // Remove default appearance on iOS
+    -webkit-appearance: none;
+    appearance: none;
+
+    &::placeholder {
+      @apply text-slate-500 dark:text-slate-400;
+    }
+
+    &:focus {
+      @apply ring-2 ring-blue-500 ring-offset-0;
+    }
+  }
+
+  // Select dropdown specific styles
+  select {
+    // Remove default appearance
+    -webkit-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%236B7280'%3E%3Cpath fill-rule='evenodd' d='M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z' clip-rule='evenodd'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.5rem center;
+    background-size: 1.5em 1.5em;
+    padding-right: 2.5rem;
+
+    &:focus {
+      @apply ring-2 ring-blue-500 ring-offset-0;
+    }
+  }
+
+  // Checkbox/Toggle switch specific styles
+  input[type="checkbox"] {
+    &[role="switch"] {
+      -webkit-appearance: none;
+      appearance: none;
+      cursor: pointer;
+
+      &:checked {
+        @apply bg-blue-600 border-blue-600;
+      }
+    }
+  }
+
+  // Responsive behavior
+  @media (max-width: 640px) {
+    // Stack elements vertically on mobile
+    form {
+      @apply flex-col;
+    }
+
+    input[type="search"],
+    select {
+      @apply w-full;
+    }
+
+    button {
+      @apply w-full;
+    }
+  }
+
+  @media (max-width: 1024px) {
+    // Adjust spacing on tablets
+    padding: 0.875rem;
+    gap: 0.75rem;
+  }
+
+  @media (min-width: 1024px) {
+    // Horizontal layout on desktop
+    form {
+      @apply flex-row;
+    }
+  }
+
+  // Animations
+  @keyframes slideIn {
+    from {
+      opacity: 0;
+      transform: translateY(-4px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  // Apply animations
+  form,
+  .flex.items-center.gap-4 {
+    animation: slideIn 0.3s ease-out;
+  }
+
+  // Dark mode overrides (handled by Tailwind's dark: prefix in HTML)
+  @media (prefers-color-scheme: dark) {
+    select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%9CA3AF'%3E%3Cpath fill-rule='evenodd' d='M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z' clip-rule='evenodd'/%3E%3C/svg%3E");
+    }
+  }
+
+  // High contrast mode support (WCAG)
+  @media (prefers-contrast: more) {
+    input,
+    select,
+    button {
+      @apply border-2 border-slate-700 dark:border-slate-300;
+    }
+
+    button {
+      @apply font-bold;
+    }
+  }
+
+  // Reduced motion support (WCAG)
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      @apply !transition-none !duration-0;
+    }
+
+    @keyframes slideIn {
+      from,
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
+
+    @keyframes fadeIn {
+      from,
+      to {
+        opacity: 1;
+      }
+    }
+  }
+
+  // Screen reader only text utility
+  .sr-only {
+    @apply absolute w-1 h-1 p-0 -m-1 overflow-hidden clip-path-inset-50 white-space-nowrap border-0;
+  }
+
+  // Print styles
+  @media print {
+    button,
+    input[type="search"],
+    select {
+      @apply print:hidden;
+    }
+  }
+}
+
+// Layer-specific styling notes:
+//
+// Layer 1 (Presentation):
+//   - Search input and filter dropdowns (office, client type, supervisor)
+//   - Apply and Reset buttons for filter management
+//   - Use consistent sizing and spacing
+//   - Maintain visual hierarchy with color contrast
+//
+// Layer 2 (Container):
+//   - Show Details toggle (checkbox with role="switch")
+//   - View Mode selector (Week, Day, Month)
+//   - Group related controls together
+//   - Use subtle background to distinguish from main filters
+//
+// Layer 3 (Feature):
+//   - Week navigation (prev/current week/next buttons)
+//   - Highlight current selection with background
+//   - Use intuitive navigation arrows
+//   - Real-time aria-live updates for screen readers
+//
+// Layer 4 (Core):
+//   - Today button for primary action
+//   - Position at end of filter toolbar
+//   - Clear call-to-action styling with distinct color
+//   - Provides quick access to current date navigation
