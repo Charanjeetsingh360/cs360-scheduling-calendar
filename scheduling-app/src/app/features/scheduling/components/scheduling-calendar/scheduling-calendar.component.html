@@ -1,0 +1,57 @@
+<div class="scheduling-page flex flex-col h-screen bg-surface-page">
+  <!-- PAGE HEADER -->
+  <div class="page-header flex items-center justify-between px-6 py-3 bg-white border-b border-border">
+    <div class="flex items-center gap-3">
+      <mat-icon class="text-primary">calendar_today</mat-icon>
+      <h1 class="text-xl font-semibold text-text-primary">Scheduling</h1>
+      <span class="text-sm text-text-secondary">Home / Scheduling / Schedule Calendar</span>
+    </div>
+    <div class="flex items-center gap-2">
+      <button mat-flat-button color="primary" class="publish-btn">Publish</button>
+      <button mat-icon-button color="warn"><mat-icon>delete</mat-icon></button>
+      <button mat-icon-button class="text-yellow-500"><mat-icon>warning</mat-icon></button>
+      <button mat-icon-button color="primary"><mat-icon>add_circle</mat-icon></button>
+    </div>
+  </div>
+  <!-- FILTER TOOLBAR -->
+  <app-filter-toolbar (filterChanged)="onFilterChanged($event)"></app-filter-toolbar>
+  <!-- CALENDAR GRID -->
+  <div class="calendar-wrap flex-1 overflow-auto">
+    <table class="calendar-table w-full border-collapse">
+      <thead>
+        <tr>
+          <th class="client-col bg-surface-header border-b border-r border-border text-left px-4 py-2 text-sm font-semibold text-text-secondary sticky left-0 z-10">Client</th>
+          <th *ngFor="let date of weekDates" class="day-col border-b border-r border-border text-center px-2 py-2" [class.today-col]="isToday(date)" [style.background]="isToday(date)?'var(--surface-today)':'var(--surface-header)'">
+            <div class="text-xs font-medium text-text-secondary uppercase">{{dayNames[date.getDay()]}}</div>
+            <div class="text-lg font-bold" [class.text-primary]="isToday(date)">{{date.getMonth()+1}}/{{date.getDate()}}</div>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let client of pagedClients" class="calendar-row hover:bg-gray-50 transition-colors">
+          <td class="client-col bg-white border-b border-r border-border px-4 py-2 sticky left-0 z-10 min-w-44">
+            <div class="font-medium text-sm text-text-primary">{{client.name}}</div>
+            <div class="text-xs text-text-secondary">{{client.office}} | {{client.clientType}}</div>
+          </td>
+          <td *ngFor="let date of weekDates" class="day-cell border-b border-r border-border p-1 align-top" [class.today-cell]="isToday(date)" [style.background]="isToday(date)?'rgba(227,242,253,0.3)':'transparent'">
+            <app-shift-card *ngFor="let shift of getShiftsForDay(client,date)" [shift]="shift"></app-shift-card>
+            <div *ngIf="getShiftsForDay(client,date).length===0" class="empty-cell h-12"></div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <!-- STATUS BAR -->
+  <div class="status-bar flex items-center justify-between px-4 py-2 bg-white border-t border-border">
+    <div class="flex items-center gap-1 text-sm text-text-secondary">
+      <button mat-icon-button [disabled]="currentPage===1" (click)="currentPage=1"><mat-icon>first_page</mat-icon></button>
+      <button mat-icon-button [disabled]="currentPage===1" (click)="currentPage=currentPage-1"><mat-icon>chevron_left</mat-icon></button>
+      <span>Showing {{(currentPage-1)*pageSize+1}}-{{min(currentPage*pageSize,totalItems)}} of {{totalItems}}</span>
+      <button mat-icon-button [disabled]="currentPage===totalPages" (click)="currentPage=currentPage+1"><mat-icon>chevron_right</mat-icon></button>
+      <button mat-icon-button [disabled]="currentPage===totalPages" (click)="currentPage=totalPages"><mat-icon>last_page</mat-icon></button>
+    </div>
+    <div class="flex items-center gap-2 flex-wrap">
+      <span *ngFor="let s of statusLegend" class="legend-chip" [style.background]="s.color+20" [style.border-color]="s.color">{{s.key}}</span>
+    </div>
+  </div>
+</div>

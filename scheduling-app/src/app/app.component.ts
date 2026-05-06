@@ -1,0 +1,1 @@
+import{Component}from"@angular/core";@Component({selector:"app-root",template:"<app-scheduling-calendar></app-scheduling-calendar>"})export class AppComponent{}

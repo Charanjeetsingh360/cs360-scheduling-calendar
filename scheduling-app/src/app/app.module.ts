@@ -1,0 +1,25 @@
+import{NgModule}from"@angular/core";
+import{BrowserModule}from"@angular/platform-browser";
+import{BrowserAnimationsModule}from"@angular/platform-browser/animations";
+import{ReactiveFormsModule}from"@angular/forms";
+import{MatToolbarModule}from"@angular/material/toolbar";
+import{MatButtonModule}from"@angular/material/button";
+import{MatIconModule}from"@angular/material/icon";
+import{MatFormFieldModule}from"@angular/material/form-field";
+import{MatInputModule}from"@angular/material/input";
+import{MatSelectModule}from"@angular/material/select";
+import{MatCheckboxModule}from"@angular/material/checkbox";
+import{MatSlideToggleModule}from"@angular/material/slide-toggle";
+import{MatPaginatorModule}from"@angular/material/paginator";
+import{MatTooltipModule}from"@angular/material/tooltip";
+import{MatChipsModule}from"@angular/material/chips";
+import{AppRoutingModule}from"./app-routing.module";
+import{AppComponent}from"./app.component";
+import{FilterToolbarComponent}from"./features/scheduling/components/filter-toolbar/filter-toolbar.component";
+import{ShiftCardComponent}from"./features/scheduling/components/shift-card/shift-card.component";
+import{SchedulingCalendarComponent}from"./features/scheduling/components/scheduling-calendar/scheduling-calendar.component";
+@NgModule({declarations:[AppComponent,FilterToolbarComponent,ShiftCardComponent,SchedulingCalendarComponent],
+imports:[BrowserModule,BrowserAnimationsModule,ReactiveFormsModule,AppRoutingModule,
+MatToolbarModule,MatButtonModule,MatIconModule,MatFormFieldModule,MatInputModule,MatSelectModule,MatCheckboxModule,MatSlideToggleModule,MatPaginatorModule,MatTooltipModule,MatChipsModule],
+bootstrap:[AppComponent]})
+export class AppModule{}

@@ -1,0 +1,31 @@
+<div class="filter-toolbar flex flex-wrap items-center gap-2 px-4 py-2 bg-surface-header border-b border-border">
+  <form [formGroup]="form" class="flex flex-wrap items-center gap-2 flex-1">
+    <mat-form-field appearance="outline" class="filter-field">
+      <mat-icon matPrefix>search</mat-icon>
+      <input matInput formControlName="search" placeholder="Search">
+    </mat-form-field>
+    <mat-form-field appearance="outline" class="filter-field">
+      <mat-select formControlName="office"><mat-option *ngFor="let o of offices" [value]="o">{{o}}</mat-option></mat-select>
+    </mat-form-field>
+    <mat-form-field appearance="outline" class="filter-field">
+      <mat-select formControlName="clientType"><mat-option *ngFor="let c of clientTypes" [value]="c">{{c}}</mat-option></mat-select>
+    </mat-form-field>
+    <mat-form-field appearance="outline" class="filter-field">
+      <mat-select formControlName="supervisor"><mat-option *ngFor="let s of supervisors" [value]="s">{{s}}</mat-option></mat-select>
+    </mat-form-field>
+    <button mat-flat-button color="primary" (click)="apply()" class="apply-btn">Apply</button>
+    <button mat-button (click)="reset()" class="text-text-secondary">Reset</button>
+  </form>
+  <div class="flex items-center gap-2 ml-auto">
+    <mat-slide-toggle formControlName="showDetails" class="text-sm">Show Details</mat-slide-toggle>
+    <mat-form-field appearance="outline" class="filter-field w-24">
+      <mat-select formControlName="viewMode"><mat-option *ngFor="let v of viewModes" [value]="v">{{v}}</mat-option></mat-select>
+    </mat-form-field>
+    <div class="flex items-center gap-1">
+      <button mat-icon-button (click)="prevWeek()"><mat-icon>chevron_left</mat-icon></button>
+      <span class="text-sm font-medium text-text-primary px-2">{{currentWeekLabel}}</span>
+      <button mat-icon-button (click)="nextWeek()"><mat-icon>chevron_right</mat-icon></button>
+    </div>
+    <button mat-stroked-button (click)="goToday()" class="today-btn">Today</button>
+  </div>
+</div>

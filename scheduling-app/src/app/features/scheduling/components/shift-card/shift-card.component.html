@@ -1,0 +1,13 @@
+<div class="shift-card" [style.background-color]="bgColor" [class.compact]="compact">
+  <div class="flex items-start justify-between">
+    <div class="flex-1 min-w-0">
+      <div class="shift-time"><strong>{{shift.startTime}}-{{shift.endTime}}</strong> {{shift.timezone}}</div>
+      <div class="shift-service truncate">{{shift.serviceType}}</div>
+      <div class="shift-caregiver truncate">{{shift.caregiverName}}</div>
+    </div>
+    <div class="flex flex-col items-end gap-1">
+      <mat-checkbox class="shift-check"></mat-checkbox>
+      <mat-icon *ngIf="shift.isRecurring" class="shift-recurring text-xs">repeat</mat-icon>
+    </div>
+  </div>
+</div>

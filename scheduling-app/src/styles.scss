@@ -1,0 +1,16 @@
+:root {
+  --color-primary: #01696f; --color-primary-light: #00838a; --color-primary-dark: #004f54;
+  --color-shift-scheduled: #FFC107; --color-shift-confirmed: #4CAF50;
+  --color-shift-alert: #EF5350; --color-shift-pending: #FF9800;
+  --color-shift-open: #90CAF9; --color-shift-cancelled: #BDBDBD;
+  --surface-page: #F5F5F5; --surface-card: #FFFFFF; --surface-header: #FAFAFA;
+  --surface-today: #E3F2FD; --border-color: #E0E0E0;
+  --text-primary: #212121; --text-secondary: #757575;
+  --font-family: 'Inter', 'Roboto', sans-serif;
+  --radius-sm: 4px; --radius: 6px; --radius-md: 8px;
+  --shadow-card: 0 1px 3px rgba(0,0,0,0.12);
+}
+@tailwind base; @tailwind components; @tailwind utilities;
+* { box-sizing: border-box; }
+body { font-family: var(--font-family); background: var(--surface-page); color: var(--text-primary); margin: 0; }
+.mat-mdc-button { font-family: var(--font-family) !important; }
